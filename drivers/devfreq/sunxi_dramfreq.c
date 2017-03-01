@@ -725,17 +725,17 @@ static int sunxi_dramfreq_task_func(void *data)
 	struct devfreq *df = (struct devfreq *)data;
 
 	while (1) {
+#if 0
 		mutex_lock(&df->lock);
 		update_devfreq(df);
 		mutex_unlock(&df->lock);
-
+#endif
 		set_current_state(TASK_INTERRUPTIBLE);
 		schedule();
 		if (kthread_should_stop())
 			break;
 		set_current_state(TASK_RUNNING);
 	}
-
 	return 0;
 }
 

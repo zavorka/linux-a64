@@ -862,12 +862,12 @@ int sunxi_usb_disable_ehci(__u32 usbc_no)
 
 	sunxi_ehci = g_sunxi_ehci[usbc_no];
 	if(sunxi_ehci == NULL){
-		DMSG_PANIC("ERR: sunxi_ehci is null\n");
+		DMSG_INFO("ERR: sunxi_ehci is null\n");
 		return -1;
 	}
 
 	if(sunxi_ehci->probe == 0){
-		DMSG_PANIC("ERR: sunxi_ehci is disable, can not disable again\n");
+		DMSG_INFO("ERR: sunxi_ehci is disable, can not disable again\n");
 		return -1;
 	}
 
