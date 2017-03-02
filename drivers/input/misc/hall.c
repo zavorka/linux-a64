@@ -24,7 +24,7 @@
 #endif
 
 
-#define DEV_NAME "hall"
+#define DEV_NAME "Lid Switch"
 
 //log
 #define DEBUG_NONE 0
