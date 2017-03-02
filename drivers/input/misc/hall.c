@@ -48,14 +48,9 @@ static int debug_level = DEBUG_DEBUG;
 #define LOGF() LOGD("%s", __func__)
 
 
-#define KEY_HALL_OPEN KEY_A
-#define KEY_HALL_CLOSE KEY_SUSPEND
 #define HALL_OPEN 0
 #define HALL_CLOSE 1
 #define HALL_UNKNOW 2
-//#define HALL_REPORT_KEY //report key
-#define HALL_REPORT_SW //report switch
-//#define HALL_STATE_LOCK
 
 struct hall_data {
     int gpio;
@@ -167,24 +162,13 @@ static void hall_handler(struct work_struct *work)
     if(val ^ hdata->pos) {
         LOGI("HALL_OPEN");
         state = HALL_OPEN;
-        key = KEY_HALL_OPEN;
     } else {
         LOGI("HALL_CLOSE");
         state = HALL_CLOSE;
-        key = KEY_HALL_CLOSE;
     }
 
-#ifdef HALL_REPORT_KEY
-    input_report_key(hdata->input, key, 1);
-    input_sync(hdata->input);
-    input_report_key(hdata->input, key, 0);
-    input_sync(hdata->input);
-#endif
-
-#ifdef HALL_REPORT_SW
     input_report_switch(hdata->input, SW_LID, state);
     input_sync(hdata->input);
-#endif
 
     /*
     request_irq(hdata->irq, hall_isr, IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING, hdata);
@@ -296,8 +280,6 @@ static int hall_probe(struct platform_device *pdev)
 		goto fail1;
 	}
 
-    input_set_capability(input, EV_KEY, KEY_HALL_OPEN);
-    input_set_capability(input, EV_KEY, KEY_HALL_CLOSE);
     input_set_capability(input, EV_SW, SW_LID);
     input->name = DEV_NAME;
 	err = input_register_device(input);
