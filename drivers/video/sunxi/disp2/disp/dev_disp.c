@@ -587,7 +587,10 @@ static void start_work(struct work_struct *work)
 			__inf("sel=%d, output_type=%d, lcd_reg=%d, hdmi_reg=%d\n",
 				screen_id, output_type, lcd_registered, hdmi_registered);
 			if (((disp_mode	== DISP_INIT_MODE_SCREEN0) && (screen_id == 0))
-				|| ((disp_mode	== DISP_INIT_MODE_SCREEN1) && (screen_id == 1))) {
+				|| ((disp_mode  == DISP_INIT_MODE_SCREEN1) && (screen_id == 1))
+				|| ((disp_mode == DISP_INIT_MODE_TWO_DIFF_SCREEN || disp_mode == DISP_INIT_MODE_TWO_SAME_SCREEN)
+					&& (screen_id == 0 || screen_id == 1)))
+			{
 				if ((output_type == DISP_OUTPUT_TYPE_LCD)) {
 					if (lcd_registered	&& bsp_disp_get_output_type(screen_id) != DISP_OUTPUT_TYPE_LCD) {
 						bsp_disp_device_switch(screen_id, output_type, output_mode);
