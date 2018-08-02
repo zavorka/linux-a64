@@ -14,6 +14,7 @@
 #endif
 
 s32 axp_debug = 0x0;
+s32 softreset = 0x0;
 s32 vbus_curr_limit_debug = 1;
 static s32 reg_debug = 0x0;
 
@@ -32,8 +33,63 @@ static ssize_t axpdebug_store(struct class *class,
 
 static ssize_t axpdebug_show(struct class *class,
 			struct class_attribute *attr,	char *buf)
+
 {
 	return sprintf(buf, "%x\n", axp_debug);
+}
+
+static ssize_t softreset_show(struct class *class,
+			struct class_attribute *attr,	char *buf)
+{
+	return sprintf(buf, "0\n");
+}
+
+static ssize_t softreset_store(struct class *class,
+			struct class_attribute *attr,	const char *buf, size_t count)
+{
+	s32 var;
+	var = simple_strtoul(buf, NULL, 16);
+	printk("%s: var=%d\n", __func__, var);
+	if(var) {
+		 axp_set_bits(axp_charger->master, 0x32, 0x80);
+	}
+	return count;
+}
+
+static ssize_t dbgwr_show(struct class *class,
+			struct class_attribute *attr,	char *buf)
+{
+	return sprintf(buf, "0\n");
+}
+
+static ssize_t dbgwr_store(struct class *class,
+			struct class_attribute *attr,	const char *buf, size_t count)
+{
+	s32 var;
+	u8 addr, data;
+	var = simple_strtoul(buf, NULL, 16);
+	addr = (u8)(var >> 8);
+	data = (u8)(var & 0xff);
+	printk("%s: var=%d\n", __func__, var);
+	if(var) {
+		 axp_write(axp_charger->master, addr, data);
+	}
+	return count;
+}
+
+static ssize_t dbgsb_store(struct class *class,
+			struct class_attribute *attr,	const char *buf, size_t count)
+{
+	s32 var;
+	u8 addr, data;
+	var = simple_strtoul(buf, NULL, 16);
+	addr = (u8)(var >> 8);
+	data = (u8)(var & 0xff);
+	printk("%s: var=%d\n", __func__, var);
+	if(var) {
+		 axp_write(axp_charger->master, addr, data);
+	}
+	return count;
 }
 
 static ssize_t axp_regdebug_store(struct class *class,
@@ -209,6 +265,9 @@ static ssize_t axp_ext_valid_show(struct class *class,
 static struct class_attribute axppower_class_attrs[] = {
 	__ATTR(vbuslimit,S_IRUGO|S_IWUSR,vbuslimit_show,vbuslimit_store),
 	__ATTR(axpdebug,S_IRUGO|S_IWUSR,axpdebug_show,axpdebug_store),
+	__ATTR(dbgsb,S_IRUGO|S_IWUSR,dbgwr_show,dbgsb_store),
+	__ATTR(dbgwr,S_IRUGO|S_IWUSR,dbgwr_show,dbgwr_store),
+	__ATTR(softreset,S_IRUGO|S_IWUSR,softreset_show,softreset_store),
 	__ATTR(regdebug,S_IRUGO|S_IWUSR,axp_regdebug_show,axp_regdebug_store),
 	__ATTR(out_factory_mode,S_IRUGO|S_IWUSR,out_factory_mode_show,out_factory_mode_store),
 	__ATTR(rdc_show,S_IRUGO,axp_rdc_show,NULL),
