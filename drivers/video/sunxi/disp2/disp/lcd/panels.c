@@ -13,6 +13,7 @@ extern __lcd_panel_t inet_dsi_panel;
 extern __lcd_panel_t mb709_mipi_panel;
 extern __lcd_panel_t anx9804_panel;
 extern __lcd_panel_t ls050t1sx01_panel;
+extern __lcd_panel_t otm8009a_panel;
 
 __lcd_panel_t* panel_array[] = {
 	&default_panel,
@@ -27,6 +28,7 @@ __lcd_panel_t* panel_array[] = {
 	&mb709_mipi_panel,
 	&anx9804_panel,
 	&ls050t1sx01_panel,
+	&otm8009a_panel,
 	NULL,
 };
 
